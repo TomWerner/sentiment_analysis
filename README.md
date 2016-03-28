@@ -5,6 +5,9 @@ Large Data Analysis Project
 The Large Movie Review Dataset can be downloaded here: http://ai.stanford.edu/~amaas/data/sentiment/  
 Extract the data so that aclImdb/ is in the root directory of the project (sentiment_analysis/aclImdb)  
 
+### A good starting paper
+I used this paper (http://arxiv.org/pdf/1305.6143.pdf) to get a start on a lot of the code/modeling, including the negation.
+
 ## Build the training/testing datasets
 Run from the main directory ("python preprocessing.py" will do this)
 ```python
