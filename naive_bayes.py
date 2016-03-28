@@ -1,6 +1,7 @@
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import confusion_matrix
-
+import pickle
+import logging
 
 if __name__ == "__main__":
     inputs, outputs, word_list = pickle.load(open("training_data.pkl", 'rb'))
