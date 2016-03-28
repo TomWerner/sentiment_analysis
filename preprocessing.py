@@ -129,21 +129,3 @@ def build_test_data_target_matrices(pos_directory, neg_directory, train_word_lis
 
     pickle.dump((input_matrix, output_matrix, train_word_list), open("testing_data.pkl", 'wb'))
     logging.info("Data saved successfully!")
-
-
-if __name__ == "__main__":
-    utilities.initialize_logger()
-    logging.info("Program loaded at: %s" % str(os.getcwd()))
-    # inputs, outputs, word_list = build_data_target_matrices("aclImdb/train/pos/", "aclImdb/train/neg/", save_data=True)
-    # build_test_data_target_matrices("aclImdb/test/pos/", "aclImdb/test/neg/", word_list)
-
-    inputs, outputs, word_list = pickle.load(open("training_data.pkl", 'rb'))
-    test_inputs, test_outputs, _ = pickle.load(open("testing_data.pkl", 'rb'))
-    from sklearn.naive_bayes import BernoulliNB
-    model = BernoulliNB()
-    logging.info("Beginning training")
-    model.fit(inputs, outputs.ravel())
-    logging.info("Training complete")
-    print()
-    from sklearn.metrics import confusion_matrix
-    print(confusion_matrix(test_outputs, model.predict(test_inputs)))
