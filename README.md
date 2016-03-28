@@ -9,7 +9,7 @@ Extract the data so that aclImdb/ is in the root directory of the project (senti
 I used this paper (http://arxiv.org/pdf/1305.6143.pdf) to get a start on a lot of the code/modeling, including the negation.
 
 ## Build the training/testing datasets
-Run from the main directory ("python preprocessing.py" will do this)
+Run from the main directory ("python build_saved_data_files.py" will do this)
 ```python
 trn_inputs, trn_outputs, trn_word_list = 
   preprocessing.build_data_target_matrices("aclImdb/train/pos/", "aclImdb/train/neg/", save_data=True)
@@ -17,7 +17,7 @@ tst_inputs, tst_outputs, _ =
   preprocessing.build_test_data_target_matrices("aclImdb/test/pos/", "aclImdb/test/neg/", trn_word_list)
 ```
 This will create training_data.pkl and testing_data.pkl  
-Then you can train and evaluate a model using the following code:  
+Then you can train and evaluate a model using the following code (also in naive_bayes.py):  
 ```python
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import confusion_matrix
