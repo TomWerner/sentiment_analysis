@@ -63,6 +63,7 @@ def main():
     # chi2_cv_feature_selection(tfidf_inputs, outputs, LogisticRegression(penalty='l1'), inputs.shape[1], "images/features_vs_accuracy_LogRegL1_0_to_max.png")
     # chi2_cv_feature_selection(tfidf_inputs, outputs, LogisticRegression(penalty='l1'), 4000, "images/features_vs_accuracy_LogRegL1_0_to_4000.png")
     # chi2_cv_feature_selection(tfidf_inputs, outputs, LogisticRegression(penalty='l1'), 1000, "images/features_vs_accuracy_LogRegL1_0_to_1000.png")
+    # chi2_cv_feature_selection(inputs, outputs, LogisticRegression(penalty='l1'), 2500, "images/features_vs_accuracy_LogRegL1_0_to_2500.png")
 
     evaluate_var_selected_models(inputs, outputs)
 
@@ -73,12 +74,12 @@ def evaluate_var_selected_models(inputs, outputs):
     model_names = ["BernoulliNB", "MultinomialNB", "LinearSVC", "LogisticRegression", "L1_LogisticRegression",
                    "RandomForest", "RBF_SVC"]
     for model, model_name in zip(models, model_names):
-        pipeline = Pipeline([('chi2_top_850', SelectKBest(chi2, 850)),
-                             ('l1_log_reg', LogisticRegression('l1'))])
+        pipeline = Pipeline([('chi2_top_2000', SelectKBest(chi2, 2000)),
+                             ('l1_log_reg', SelectFromModel(LogisticRegression('l1')))])
         train_inputs = pipeline.fit_transform(inputs, outputs.ravel())
 
         scores = cross_val_score(model, train_inputs, outputs.ravel(), cv=10)
-        logging.info("Accuracy for %s: %.02f, std: %.02f" % (model_name, scores.mean(), scores.std()))
+        logging.info("%s | %.02f | %.02f" % (model_name, scores.mean(), scores.std()))
 
 
 def check_different_data_options():
@@ -150,5 +151,5 @@ def evaluate_baseline():
 
 if __name__ == "__main__":
     utilities.initialize_logger()
-    check_different_data_options()
-    # main()
+    # check_different_data_options()
+    main()
