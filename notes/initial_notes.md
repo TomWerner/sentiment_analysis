@@ -10,7 +10,7 @@ Identical to without counts for Bernoulli
 ## Counts, TF-IDF, Sci-kit learn TF-IDF loader
 We wanted to see if doing the TF-IDF transformation would be at all useful, or if we should stick with the boolean data.
 As we can see, logistic regression (with L1 regularization on the TF-IDF transformed data performed far better than
-other options, and so we proceeded using that model. Additionally, the TF-IDF data was superior for all three
+other options, and so we proceeded using that model. Additionally, the TF-IDF data was better for all three
 tested models.
 
 Model | Input Type | 10-fold Accuracy | Stardard Dev
@@ -27,16 +27,21 @@ LogReg | Sci-kit learn TF-IDF | 0.71 | 0.01
 
 # Variable Selection
 ## K-Best features using chi-squared test
-See features_vs_accuracy plots for naive bayes and L1 logistic regression. Using these, the L1 regularized logistic
-regression model proved better, and somewhere around 850 features was ideal. The following 10-fold scores for models
-are build using first the top 850 chi-squared features, and then the L1 regularization as another layer of features
+
+![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_max.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
+![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_4000.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
+![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_2500.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
+
+
+Using these plots we found somewhere around 2000 features was ideal. The following 10-fold scores for models
+are build using first the top 2000 chi-squared features, and then the L1 regularization as another layer of features
 selection.
 
 Model | 10-fold Accuracy | Standard Dev
 --- | --- | ---
 BernoulliNB | 0.85 | 0.01
 MultinomialNB | 0.87 | 0.01
-LinearSVC | **0.88** | 0.00
+LinearSVC | **0.89** | 0.00
 LogisticRegression | 0.87 | 0.01
 L1_LogisticRegression | 0.87 | 0.00
 RandomForest | 0.78 | 0.01
