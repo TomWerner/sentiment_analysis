@@ -25,7 +25,7 @@ def test_get_document_word_map():
     assert_equals(["test_file_1.txt", "test_file_2.txt"], sorted(result.keys()))
 
     assert_equals(['this', 'movie', 'while', 'not', 'not_great', 'wasn\'t', 'not_bad'], result['test_file_1.txt'])
-    assert_equals(['this', 'movie', 'was', 'amazing'], result['test_file_2.txt'])
+    assert_equals(['this', 'movie', 'was', 'amazing', 'amazing'], result['test_file_2.txt'])
 
 
 def test_build_data_target_matrices():
@@ -35,7 +35,7 @@ def test_build_data_target_matrices():
 
     pos_map = preprocessing.get_document_word_map("../test/pos")
     assert_equals(['this', 'movie', 'while', 'not', 'not_great', 'wasn\'t', 'not_bad'], pos_map['test_file_1.txt'])
-    assert_equals(['this', 'movie', 'was', 'amazing'], pos_map['test_file_2.txt'])
+    assert_equals(['this', 'movie', 'was', 'amazing', 'amazing'], pos_map['test_file_2.txt'])
 
     neg_map = preprocessing.get_document_word_map("../test/neg")
     assert_equals(['sucked', 'totally', 'sucked'], neg_map['test_file_3.txt'])
@@ -59,7 +59,7 @@ def test_build_data_target_matrices_with_counts():
 
     pos_map = preprocessing.get_document_word_map("../test/pos")
     assert_equals(['this', 'movie', 'while', 'not', 'not_great', 'wasn\'t', 'not_bad'], pos_map['test_file_1.txt'])
-    assert_equals(['this', 'movie', 'was', 'amazing'], pos_map['test_file_2.txt'])
+    assert_equals(['this', 'movie', 'was', 'amazing', 'amazing'], pos_map['test_file_2.txt'])
 
     neg_map = preprocessing.get_document_word_map("../test/neg")
     assert_equals(['sucked', 'totally', 'sucked'], neg_map['test_file_3.txt'])
@@ -67,7 +67,7 @@ def test_build_data_target_matrices_with_counts():
     all_words = ['amazing', 'movie', 'not', 'not_bad', 'not_great', 'sucked', 'this', 'totally', 'was', "wasn't", 'while']
 
     np.testing.assert_array_equal(input_matrix[0], np.array([0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1]))
-    np.testing.assert_array_equal(input_matrix[1], np.array([1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]))
+    np.testing.assert_array_equal(input_matrix[1], np.array([2, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]))
     np.testing.assert_array_equal(input_matrix[2], np.array([0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0]))
 
     assert_equals(1, output_matrix[0, 0])
@@ -105,7 +105,7 @@ def test_build_test_data_target_matrices_with_counts():
     input_matrix = input_matrix.toarray()
 
     np.testing.assert_array_equal(input_matrix[0], np.array([0, 1, 1, 1, 1, 0]))
-    np.testing.assert_array_equal(input_matrix[1], np.array([1, 1, 0, 0, 0, 0]))
+    np.testing.assert_array_equal(input_matrix[1], np.array([2, 1, 0, 0, 0, 0]))
     np.testing.assert_array_equal(input_matrix[2], np.array([0, 0, 0, 0, 0, 2]))
 
     assert_equals(1, output_matrix[0, 0])
