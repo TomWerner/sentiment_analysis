@@ -5,6 +5,7 @@ import pickle
 
 import numpy as np
 from scipy.sparse import csr_matrix
+from collections import Counter
 
 import utilities
 
@@ -55,14 +56,16 @@ def get_document_word_map(directory, limit=-1):
     return result
 
 
-def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data=False, min_count_thresh=1):
+def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data=False, min_count_thresh=1, binary_output=True):
     pos_document_word_map = get_document_word_map(pos_directory, limit=limit)
     neg_document_word_map = get_document_word_map(neg_directory, limit=limit)
     all_words = CountDict()
     for key in pos_document_word_map.keys():
         [all_words.increment(word) for word in pos_document_word_map[key] if len(word) > 0]
+        pos_document_word_map[key] = Counter(pos_document_word_map[key])
     for key in neg_document_word_map.keys():
         [all_words.increment(word) for word in neg_document_word_map[key] if len(word) > 0]
+        neg_document_word_map[key] = Counter(neg_document_word_map[key])
 
     # Build our input/output matrices
     global_word_list = list(sorted([word for word in all_words.keys() if all_words[word] > min_count_thresh]))
@@ -81,14 +84,14 @@ def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data
             words = set(word_map[key])
             for word in words:
                 if word in lookup:
-                    value_list.append(1)
+                    value_list.append(1 if binary_output else word_map[key][word])
                     row_list.append(row)
                     col_list.append(lookup[word])
             row += 1
     output_matrix[0: len(pos_document_word_map.keys()), ] = 1
 
     logging.info("Creating sparse input matrix")
-    input_matrix = csr_matrix((value_list, (row_list, col_list)), dtype=np.int8)
+    input_matrix = csr_matrix((value_list, (row_list, col_list)), dtype=int)
 
     if save_data:
         pickle.dump((input_matrix, output_matrix, global_word_list), open("training_data.pkl", 'wb'))
@@ -97,15 +100,21 @@ def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data
     return input_matrix, output_matrix, global_word_list
 
 
-def build_test_data_target_matrices(pos_directory, neg_directory, train_word_list):
+def build_test_data_target_matrices(pos_directory, neg_directory, train_word_list, save_data=False, binary_output=True):
     logging.info("Beginning to build test data matrices")
     value_list = []
     row_list = []
     col_list = []
     row = 0
+    pos_document_word_map = get_document_word_map(pos_directory)
+    neg_document_word_map = get_document_word_map(neg_directory)
+    for key in pos_document_word_map.keys():
+        pos_document_word_map[key] = Counter(pos_document_word_map[key])
+    for key in neg_document_word_map.keys():
+        neg_document_word_map[key] = Counter(neg_document_word_map[key])
 
     lookup = {word: index for index, word in enumerate(train_word_list)}
-    for directory in [pos_directory, neg_directory]:
+    for directory, word_map in zip([pos_directory, neg_directory], [pos_document_word_map, neg_document_word_map]):
         for filename in os.listdir(directory):
             if not filename.endswith(".txt"):
                 continue
@@ -113,13 +122,11 @@ def build_test_data_target_matrices(pos_directory, neg_directory, train_word_lis
             words = set(extract_words(f.readline()))
             for word in words:
                 if word in lookup:
-                    value_list.append(1)
+                    value_list.append(1 if binary_output else word_map[filename][word])
                     row_list.append(row)
                     col_list.append(lookup[word])
             row += 1
     logging.info("Sparse data ready")
-    pos_document_word_map = get_document_word_map(pos_directory)
-    neg_document_word_map = get_document_word_map(neg_directory)
 
     output_matrix = np.zeros((len(pos_document_word_map.keys()) + len(neg_document_word_map.keys()), 1), dtype=np.int8)
     output_matrix[0: len(pos_document_word_map.keys()), ] = 1
@@ -127,5 +134,8 @@ def build_test_data_target_matrices(pos_directory, neg_directory, train_word_lis
     logging.info("Creating sparse input matrix")
     input_matrix = csr_matrix((value_list, (row_list, col_list)), dtype=np.int8)
 
-    pickle.dump((input_matrix, output_matrix, train_word_list), open("testing_data.pkl", 'wb'))
-    logging.info("Data saved successfully!")
+    if save_data:
+        pickle.dump((input_matrix, output_matrix, train_word_list), open("testing_data.pkl", 'wb'))
+        logging.info("Data saved successfully!")
+
+    return input_matrix, output_matrix, train_word_list
