@@ -37,7 +37,7 @@ Using these plots we found somewhere around 2000 features was ideal. The followi
 are build using first the top 2000 chi-squared features, and then the L1 regularization as another layer of features
 selection.
 
-Model | 10-fold Accuracy | Standard Dev | 10-fold train/pred time
+Model | 10-fold Accuracy | Standard Dev | 10-fold train/pred time (seconds)
 --- | --- | --- | ---
 BernoulliNB | 0.85 | 0.01 | 01.472
 MultinomialNB | 0.87 | 0.01 | 00.956
@@ -45,4 +45,4 @@ LinearSVC | **0.89** | 0.00 | 02.895
 LogisticRegression | 0.87 | 0.01 | 04.200
 L1_LogisticRegression | 0.87 | 0.00 | 05.601
 RandomForest | 0.78 | 0.01 | 47.391
-RBF_SVC | 0.71 | 0.01 |
+RBF_SVC | 0.70 | 0.01 | 56 minutes
