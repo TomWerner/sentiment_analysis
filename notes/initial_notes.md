@@ -1,10 +1,9 @@
 # Baseline
 The baseline is a Bernoulli Naive Bayes model, using a boolean matrix of features/documents. Only single words were used
-(no n-grams), and words that occurred only once were ignored. The result of 10-fold cross validation was
-**Accuracy for Baseline BernoulliNB: 0.81, std: 0.01**
+(no n-grams), and words that occurred only once were ignored. The result of 10-fold cross validation was an accuracy of **0.81, std: 0.01**  
 The test accuracy was **0.82748**
 
-## Baseline with counts
+### Baseline with counts
 Identical to without counts for Bernoulli
 
 # Data Selection
@@ -15,12 +14,13 @@ other options, and so we proceeded using that model. Additionally, the TF-IDF da
 tested models.
 
 Model | Input Type | 10-fold Accuracy | Stardard Dev
+--- | --- | --- | --- 
 Bernoulli | Normal Inputs | 0.81 | 0.01
 Multinomial | Normal Inputs | 0.79 | 0.02
 LogReg | Normal Inputs | 0.85 | 0.01
-Bernoulli | TF-IDF Inputs | 0.81 | 0.01
-Multinomial | TF-IDF Inputs | 0.81 | 0.01
-LogReg | TF-IDF Inputs | 0.87 | 0.01
+Bernoulli | **TF-IDF Inputs** | **0.81** | 0.01
+Multinomial | **TF-IDF Inputs** | **0.81** | 0.01
+LogReg | **TF-IDF Inputs** | **0.87** | 0.01
 Bernoulli | Sci-kit learn TF-IDF | 0.69 | 0.01
 Multinomial | Sci-kit learn TF-IDF | 0.71 | 0.01
 LogReg | Sci-kit learn TF-IDF | 0.71 | 0.01
@@ -33,6 +33,7 @@ are build using first the top 850 chi-squared features, and then the L1 regulari
 selection.
 
 Model | 10-fold Accuracy | Standard Dev
+--- | --- | ---
 BernoulliNB | 0.85 | 0.01
 MultinomialNB | 0.87 | 0.01
 LinearSVC | **0.88** | 0.00
