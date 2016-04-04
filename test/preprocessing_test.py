@@ -27,6 +27,31 @@ def test_get_document_word_map():
     assert_equals(['this', 'movie', 'while', 'not', 'not_great', 'wasn\'t', 'not_bad'], result['test_file_1.txt'])
     assert_equals(['this', 'movie', 'was', 'amazing', 'amazing'], result['test_file_2.txt'])
 
+def test_get_document_word_map_with_2grams():
+    result = preprocessing.get_document_word_map("../test/pos", n_grams=2)
+    assert_equals(["test_file_1.txt", "test_file_2.txt"], sorted(result.keys()))
+
+    assert_equals(['this', 'movie', 'while', 'not', 'not_great', 'wasn\'t', 'not_bad',
+                   'this_movie', 'movie_while', 'while_not', 'not_not_great', 'not_great_wasn\'t',
+                   'wasn\'t_not_bad'], result['test_file_1.txt'])
+    assert_equals(['this', 'movie', 'was', 'amazing', 'amazing',
+                   'this_movie', 'movie_was', 'was_amazing', 'amazing_amazing'], result['test_file_2.txt'])
+
+
+def test_get_document_word_map_with_3grams():
+    result = preprocessing.get_document_word_map("../test/pos", n_grams=3)
+    assert_equals(["test_file_1.txt", "test_file_2.txt"], sorted(result.keys()))
+
+    logging.info(result['test_file_2.txt'])
+    assert_equals(['this', 'movie', 'while', 'not', 'not_great', 'wasn\'t', 'not_bad',
+                   'this_movie', 'movie_while', 'while_not', 'not_not_great', 'not_great_wasn\'t',
+                   'wasn\'t_not_bad',
+                   'this_movie_while', 'movie_while_not', 'while_not_not_great', 'not_not_great_wasn\'t',
+                   'not_great_wasn\'t_not_bad'], result['test_file_1.txt'])
+    assert_equals(['this', 'movie', 'was', 'amazing', 'amazing',
+                   'this_movie', 'movie_was', 'was_amazing', 'amazing_amazing',
+                   'this_movie_was', 'movie_was_amazing', 'was_amazing_amazing'], result['test_file_2.txt'])
+
 
 def test_build_data_target_matrices():
     input_matrix, output_matrix, word_list = preprocessing.build_data_target_matrices("../test/pos", "../test/neg",

@@ -36,7 +36,7 @@ def extract_words(line, use_negation=True):
     return result
 
 
-def get_document_word_map(directory, limit=-1):
+def get_document_word_map(directory, limit=-1, n_grams=1):
     result = {}
     count = 0
     for filename in os.listdir(directory):
@@ -44,7 +44,14 @@ def get_document_word_map(directory, limit=-1):
             continue
 
         f = open(os.path.join(directory, filename), 'r', encoding='utf-8')
-        result[filename] = extract_words(f.readline())
+        word_list = extract_words(f.readline())
+        n_gram_list = []
+        if n_grams > 1:
+            for n in range(2, n_grams + 1):
+                for i in range(n, len(word_list) + 1):
+                    n_gram_list.append("_".join(word_list[i - n: i]))
+
+        result[filename] = word_list + n_gram_list
         f.close()
         count += 1
 
@@ -56,9 +63,11 @@ def get_document_word_map(directory, limit=-1):
     return result
 
 
-def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data=False, min_count_thresh=1, binary_output=True):
-    pos_document_word_map = get_document_word_map(pos_directory, limit=limit)
-    neg_document_word_map = get_document_word_map(neg_directory, limit=limit)
+def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data=False,
+                               min_count_thresh=1, binary_output=True,
+                               n_grams=1, filename="training_data.pkl"):
+    pos_document_word_map = get_document_word_map(pos_directory, limit=limit, n_grams=n_grams)
+    neg_document_word_map = get_document_word_map(neg_directory, limit=limit, n_grams=n_grams)
     all_words = CountDict()
     for key in pos_document_word_map.keys():
         [all_words.increment(word) for word in pos_document_word_map[key] if len(word) > 0]
@@ -94,7 +103,7 @@ def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data
     input_matrix = csr_matrix((value_list, (row_list, col_list)), dtype=int)
 
     if save_data:
-        pickle.dump((input_matrix, output_matrix, global_word_list), open("training_data.pkl", 'wb'))
+        pickle.dump((input_matrix, output_matrix, global_word_list), open(filename, 'wb'))
         logging.info("Data saved successfully!")
 
     return input_matrix, output_matrix, global_word_list
