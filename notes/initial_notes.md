@@ -99,6 +99,12 @@ LogReg L1 | LinearSVC | 0.87 | 0.01
 LogReg L1 | L1_LinearSVC | 0.87 | 0.01
 LogReg L1 | LogisticRegression | 0.84 | 0.01
 LogReg L1 | L1_LogisticRegression | 0.86 | 0.01
+Linear SVC L1, C=.1 | BernoulliNB | 0.82 | 0.01
+Linear SVC L1, C=.1 | MultinomialNB | 0.84 | 0.01
+Linear SVC L1, C=.1 | LinearSVC | 0.84 | 0.01
+Linear SVC L1, C=.1 | L1_LinearSVC | 0.85 | 0.01
+Linear SVC L1, C=.1 | LogisticRegression | 0.82 | 0.01
+Linear SVC L1, C=.1 | L1_LogisticRegression | 0.85 | 0.01
 Linear SVC L1, C=1 | BernoulliNB | 0.86 | 0.01
 Linear SVC L1, C=1 | MultinomialNB | 0.86 | 0.01
 **Linear SVC L1, C=1** | **LinearSVC** | **0.88** | **0.01**
@@ -111,9 +117,34 @@ Linear SVC L1, C=10 | MultinomialNB | 0.86 | 0.01
 **Linear SVC L1, C=10** | **L1_LinearSVC** | **0.88** | **0.01**
 Linear SVC L1, C=10 | LogisticRegression | 0.86 | 0.01
 Linear SVC L1, C=10 | L1_LogisticRegression | 0.86 | 0.01
-Linear SVC L1, C=.1 | BernoulliNB | 0.82 | 0.01
-Linear SVC L1, C=.1 | MultinomialNB | 0.84 | 0.01
-Linear SVC L1, C=.1 | LinearSVC | 0.84 | 0.01
-Linear SVC L1, C=.1 | L1_LinearSVC | 0.85 | 0.01
-Linear SVC L1, C=.1 | LogisticRegression | 0.82 | 0.01
-Linear SVC L1, C=.1 | L1_LogisticRegression | 0.85 | 0.01
+
+We can see that the LinearSVC and L1_LinearSVC perform the best, and they seem to be fairly agnostic to variations of
+the C parameter in the L1 feature selection stage. We can also see that the L1_LinearSVC selector does better than
+the logistic regression one.
+
+We'll now examine the effect of the C parameter on the LinearSVC and L1_linearSVC as models after the feature selection.
+
+L1 Feature Selection Step | Model | 10-fold Accuracy | Standard Dev
+--- | --- | --- | ---
+Linear SVC L1, C=1 | LinearSVC C=.001 | 0.76 | 0.01
+Linear SVC L1, C=1 | LinearSVC C=1 | 0.88 | 0.01
+Linear SVC L1, C=1 | LinearSVC C=.1 | 0.86 | 0.01
+Linear SVC L1, C=1 | LinearSVC C=10 | 0.88 | 0.01
+Linear SVC L1, C=1 | LinearSVC C=100 | 0.87 | 0.01
+Linear SVC L1, C=1 | L1_LinearSVC C=.001 | 0.50 | 0.00
+Linear SVC L1, C=1 | L1_LinearSVC C=1 | 0.88 | 0.01
+Linear SVC L1, C=1 | L1_LinearSVC C=.1 | 0.83 | 0.01
+Linear SVC L1, C=1 | L1_LinearSVC C=10 | 0.87 | 0.01
+Linear SVC L1, C=1 | L1_LinearSVC C=100 | 0.86 | 0.01
+
+Again, the models seem fairly agnostic to it - without new methods we seem to have maxed out our model. To recap our
+best method and our evaluation technique:
+Repeat the following for each fold
+
+**1.** chi-squared test on sparse tdidf dataset to select top 13000 features from the training data
+
+**2.** Use a Linear SVC with L1 regularization, C parameter set to 1 to perform further feature selection.
+
+**3.** Train a Linear SVC on the resulting feature set, with L2 regularization, C parameter set to 1.
+
+**4.** Use this model to make a prediction on the test fold, our average performance was **88%** on an average of **1697** variables. (std = 18)

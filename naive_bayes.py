@@ -85,23 +85,36 @@ def main():
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
-    logging.info("Linear SVC L1, C=100".center(80, '-'))
-    evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=100))
-    logging.info("Linear SVC L1, C=1000".center(80, '-'))
-    evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1000))
+    logging.info("Linear SVC L1, C=1".center(80, '-'))
+    # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
+    how_many_variables_used(inputs, outputs, num_vars=13000)
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     # logging.info("Linear SVC L1, C=.1".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=.1))
 
 
+def how_many_variables_used(inputs, outputs, num_vars, l1_step=LinearSVC(penalty='l1', dual=False, C=1)):
+    kf = KFold(inputs.shape[0], n_folds=10, shuffle=True)
+    for train_indices, val_indices in kf:
+        pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
+                             ('l1_step', SelectFromModel(l1_step))])
+        x_new = pipeline.fit_transform(inputs[train_indices], outputs[train_indices].ravel())
+        print(x_new.shape)
+
+
 def evaluate_var_selected_models(inputs, outputs, num_vars, l1_step=LogisticRegression('l1')):
-    models = [BernoulliNB(), MultinomialNB(), LinearSVC(), LinearSVC(penalty='l1', dual=False), LogisticRegression(), LogisticRegression('l1')]
-    model_names = ["BernoulliNB", "MultinomialNB", "LinearSVC", "L1_LinearSVC", "LogisticRegression", "L1_LogisticRegression"]
+    # models = [BernoulliNB(), MultinomialNB(), LinearSVC(), LinearSVC(penalty='l1', dual=False), LogisticRegression(), LogisticRegression('l1')]
+    # model_names = ["BernoulliNB", "MultinomialNB", "LinearSVC", "L1_LinearSVC", "LogisticRegression", "L1_LogisticRegression"]
+    models = [LinearSVC(), LinearSVC(C=.1), LinearSVC(C=10), LinearSVC(C=100),
+              LinearSVC(penalty='l1', dual=False), LinearSVC(penalty='l1', dual=False, C=.1), LinearSVC(penalty='l1', dual=False, C=10), LinearSVC(penalty='l1', dual=False, C=100)]
+    model_names = ["LinearSVC", "LinearSVC C=.1", "LinearSVC C=10", "LinearSVC C=100",
+                   "L1_LinearSVC", "L1_LinearSVC C=.1", "L1_LinearSVC C=10", "L1_LinearSVC C=100"]
     for model, model_name in zip(models, model_names):
         pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
                              ('l1_step', SelectFromModel(l1_step)),
-                             (model_name, model)])
+                             (model_name, model)
+                             ])
 
         scores = cross_val_score(pipeline, inputs, outputs.ravel(), cv=10, n_jobs=5)
         logging.info("%s | %.02f | %.02f" % (model_name, scores.mean(), scores.std()))
