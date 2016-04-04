@@ -110,7 +110,8 @@ def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data
     return input_matrix, output_matrix, global_word_list
 
 
-def build_test_data_target_matrices(pos_directory, neg_directory, train_word_list, save_data=False, binary_output=True):
+def build_test_data_target_matrices(pos_directory, neg_directory, train_word_list,
+                                    save_data=False, binary_output=True, output_filename="testing_data.pkl"):
     logging.info("Beginning to build test data matrices")
     value_list = []
     row_list = []
@@ -142,10 +143,10 @@ def build_test_data_target_matrices(pos_directory, neg_directory, train_word_lis
     output_matrix[0: len(pos_document_word_map.keys()), ] = 1
 
     logging.info("Creating sparse input matrix")
-    input_matrix = csr_matrix((value_list, (row_list, col_list)), dtype=np.int8)
+    input_matrix = csr_matrix((value_list, (row_list, col_list)), shape=(output_matrix.shape[0], len(train_word_list)), dtype=np.int8)
 
     if save_data:
-        pickle.dump((input_matrix, output_matrix, train_word_list), open("testing_data.pkl", 'wb'))
+        pickle.dump((input_matrix, output_matrix, train_word_list), open(output_filename, 'wb'))
         logging.info("Data saved successfully!")
 
     return input_matrix, output_matrix, train_word_list

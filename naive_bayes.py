@@ -213,8 +213,24 @@ def evaluate_baseline():
     logging.info(accuracy_score(tst_outputs.ravel(), model.predict(tst_inputs)))
 
 
+def evaluate_best_so_far():
+    inputs, outputs, word_list = pickle.load(open("training_data_3_gram.pkl", 'rb'))
+    test_inputs, test_outputs, _ = pickle.load(open("testing_data_3_gram.pkl", 'rb'))
+    pipeline = Pipeline([('tfidf', TfidfTransformer()),
+                         ('chi2_top_k', SelectKBest(chi2, 13000)),
+                         ('l1_step', SelectFromModel(LinearSVC(penalty='l1', dual=False, C=1))),
+                         ('linear_svc', LinearSVC(penalty='l2', C=1))])
+
+    pipeline.fit(inputs, outputs.ravel())
+    # scores = cross_val_score(pipeline, inputs, outputs.ravel(), cv=10, n_jobs=5)
+    # logging.info("%s | %.02f | %.02f" % ("Whole pipeline", scores.mean(), scores.std()))
+    logging.info("Test accuracy: " + str(accuracy_score(test_outputs.ravel(), pipeline.predict(test_inputs))))
+
+
+
 if __name__ == "__main__":
     utilities.initialize_logger()
 
     # check_different_data_options("training_data_3_gram.pkl")
-    main()
+    # main()
+    evaluate_best_so_far()

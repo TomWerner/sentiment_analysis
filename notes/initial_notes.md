@@ -149,6 +149,8 @@ Repeat the following for each fold
 
 **4.** Use this model to make a prediction on the test fold, our average performance was **88%** on an average of **1697** variables. (std = 18)
 
+**5.** Use this model to make a prediction on the entire test set. **88.052%** accuracy on 25,000 reviews!
+
 Here's a few of the features that were deemed useful: 'a', 'a_better', 'a_bit', 'a_boy', 'a_bunch_of', 'a_car', 'a_complete', 'a_copy', 'a_dvd', 'a_favor', 'a_great_performance', 'a_group_of', 'a_job', 'a_joke', 'a_little', 'a_look', 'a_masterpiece'
 
 We also used the ExtraTreesClassifier's ability to rank feature to get a rough idea of some of the top words:
