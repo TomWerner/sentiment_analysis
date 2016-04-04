@@ -80,8 +80,8 @@ common "vocabulary", while our test set does not. So besides the speed increases
 variable selection brings, it also helps us generalize better.
 
 ## K-Best features using chi-squared test
-Because adding 2-Grams adds so many more variables, we want to repeat the process of checking accuracy vs feature count,
-using the top k features from a chi-squared test in an L1 regularized logistic regression model.
+Because adding 3-Grams adds so many more variables, we want to repeat the process of checking accuracy vs feature count,
+using the top k features from a chi-squared test.
 
 ![L1_LinSVC_3_gram](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_3_gram_LinSVCL1_0_to_max.png "L1 Regularized Linear SVC Feature Count vs Accuracy")
 ![L1_LinSVC_3_gram](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_3_gram_LinSVCL1_0_to_100k.png "L1 Regularized Linear SVC Feature Count vs Accuracy")
@@ -127,12 +127,12 @@ We'll now examine the effect of the C parameter on the LinearSVC and L1_linearSV
 L1 Feature Selection Step | Model | 10-fold Accuracy | Standard Dev
 --- | --- | --- | ---
 Linear SVC L1, C=1 | LinearSVC C=.001 | 0.76 | 0.01
-Linear SVC L1, C=1 | LinearSVC C=1 | 0.88 | 0.01
+**Linear SVC L1, C=1** | **LinearSVC C=1** | **0.88** | **0.01**
 Linear SVC L1, C=1 | LinearSVC C=.1 | 0.86 | 0.01
-Linear SVC L1, C=1 | LinearSVC C=10 | 0.88 | 0.01
+**Linear SVC L1, C=1** | **LinearSVC C=10** | **0.88** | **0.01**
 Linear SVC L1, C=1 | LinearSVC C=100 | 0.87 | 0.01
 Linear SVC L1, C=1 | L1_LinearSVC C=.001 | 0.50 | 0.00
-Linear SVC L1, C=1 | L1_LinearSVC C=1 | 0.88 | 0.01
+**Linear SVC L1, C=1** | **L1_LinearSVC C=1** | **0.88** | **0.01**
 Linear SVC L1, C=1 | L1_LinearSVC C=.1 | 0.83 | 0.01
 Linear SVC L1, C=1 | L1_LinearSVC C=10 | 0.87 | 0.01
 Linear SVC L1, C=1 | L1_LinearSVC C=100 | 0.86 | 0.01
