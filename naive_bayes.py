@@ -87,19 +87,34 @@ def main():
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     logging.info("Linear SVC L1, C=1".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
-    how_many_variables_used(inputs, outputs, num_vars=13000)
+    how_many_variables_used(word_list, inputs, outputs, num_vars=13000)
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     # logging.info("Linear SVC L1, C=.1".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=.1))
 
 
-def how_many_variables_used(inputs, outputs, num_vars, l1_step=LinearSVC(penalty='l1', dual=False, C=1)):
+def how_many_variables_used(word_list, inputs, outputs, num_vars, l1_step=LinearSVC(penalty='l1', dual=False, C=1)):
     kf = KFold(inputs.shape[0], n_folds=10, shuffle=True)
     for train_indices, val_indices in kf:
-        pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
-                             ('l1_step', SelectFromModel(l1_step))])
-        x_new = pipeline.fit_transform(inputs[train_indices], outputs[train_indices].ravel())
+        # pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
+        #                      ('l1_step', SelectFromModel(l1_step))])
+        kbest = SelectKBest(chi2, num_vars)
+        l1_selector = SelectFromModel(l1_step)
+
+        x_new = kbest.fit_transform(inputs[train_indices], outputs[train_indices].ravel())
+        indices = kbest.get_support(indices=True)
+
+        x_new = l1_selector.fit_transform(x_new, outputs[train_indices].ravel())
+        new_indices = l1_selector.get_support(indices=True)
+
+        from sklearn.ensemble import ExtraTreesClassifier
+        model = ExtraTreesClassifier()
+        model.fit(x_new, outputs[train_indices].ravel())
+        importance = np.argsort(model.feature_importances_)[::-1]
+
+        print([word_list[indices[i]] for i in new_indices])
+        print([word_list[indices[new_indices[i]]] for i in importance])
         print(x_new.shape)
 
 

@@ -25,7 +25,8 @@ def extract_words(line, use_negation=True):
         negate_sentence = False
         for word in phrase.split():
             word = word.strip(trash_characters).lower().encode('ascii', 'ignore').decode("ascii")
-
+            if len(word) == 0:
+                continue
             if use_negation:
                 result.append("not_" + word if negate_sentence else word)
             else:
