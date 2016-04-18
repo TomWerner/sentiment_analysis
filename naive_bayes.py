@@ -18,6 +18,7 @@ import os
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC, SVC
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier, LSHForest
 
 
 def add_to_feature_map(map, key, data):
@@ -86,8 +87,8 @@ def main():
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     logging.info("Linear SVC L1, C=1".center(80, '-'))
-    # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
-    how_many_variables_used(word_list, inputs, outputs, num_vars=13000)
+    evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
+    # how_many_variables_used(word_list, inputs, outputs, num_vars=13000)
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     # logging.info("Linear SVC L1, C=.1".center(80, '-'))
@@ -121,10 +122,12 @@ def how_many_variables_used(word_list, inputs, outputs, num_vars, l1_step=Linear
 def evaluate_var_selected_models(inputs, outputs, num_vars, l1_step=LogisticRegression('l1')):
     # models = [BernoulliNB(), MultinomialNB(), LinearSVC(), LinearSVC(penalty='l1', dual=False), LogisticRegression(), LogisticRegression('l1')]
     # model_names = ["BernoulliNB", "MultinomialNB", "LinearSVC", "L1_LinearSVC", "LogisticRegression", "L1_LogisticRegression"]
-    models = [LinearSVC(), LinearSVC(C=.1), LinearSVC(C=10), LinearSVC(C=100),
-              LinearSVC(penalty='l1', dual=False), LinearSVC(penalty='l1', dual=False, C=.1), LinearSVC(penalty='l1', dual=False, C=10), LinearSVC(penalty='l1', dual=False, C=100)]
-    model_names = ["LinearSVC", "LinearSVC C=.1", "LinearSVC C=10", "LinearSVC C=100",
-                   "L1_LinearSVC", "L1_LinearSVC C=.1", "L1_LinearSVC C=10", "L1_LinearSVC C=100"]
+    # models = [LinearSVC(), LinearSVC(C=.1), LinearSVC(C=10), LinearSVC(C=100),
+    #           LinearSVC(penalty='l1', dual=False), LinearSVC(penalty='l1', dual=False, C=.1), LinearSVC(penalty='l1', dual=False, C=10), LinearSVC(penalty='l1', dual=False, C=100)]
+    # model_names = ["LinearSVC", "LinearSVC C=.1", "LinearSVC C=10", "LinearSVC C=100",
+    #                "L1_LinearSVC", "L1_LinearSVC C=.1", "L1_LinearSVC C=10", "L1_LinearSVC C=100"]
+    models = [KNeighborsClassifier(n_neighbors=3), KNeighborsClassifier(n_neighbors=5), KNeighborsClassifier(n_neighbors=7)]
+    model_names = ["3-NN", "5-NN", "7-NN"]
     for model, model_name in zip(models, model_names):
         pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
                              ('l1_step', SelectFromModel(l1_step)),
@@ -232,5 +235,5 @@ if __name__ == "__main__":
     utilities.initialize_logger()
 
     # check_different_data_options("training_data_3_gram.pkl")
-    # main()
-    evaluate_best_so_far()
+    main()
+    # evaluate_best_so_far()

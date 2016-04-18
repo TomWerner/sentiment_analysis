@@ -156,3 +156,21 @@ Here's a few of the features that were deemed useful: 'a', 'a_better', 'a_bit', 
 We also used the ExtraTreesClassifier's ability to rank feature to get a rough idea of some of the top words:
 'bad', 'great', 'awful', 'worst', 'the_worst', 'not_even', 'of_the_best', 'and', 'just', 'nothing', 'boring', 'minutes', 'no', 'waste', 'not_this', 'excellent', 'love', 'poor'
 are all very reasonable choices!
+
+
+ELM: full linear | 0.84 | 0.01
+ELM: full linear, 1 tanh | 0.86 | 0.01
+ELM: full linear, 5 tanh | 0.87 | 0.01
+ELM: full linear, 10 tanh | 0.87 | 0.01
+ELM: full linear, 100 tanh | 0.86 | 0.01
+ELM: full linear, 500 tanh | 0.86 | 0.01
+ELM: full linear, 1000 tanh | 0.86 | 0.01
+ELM: full linear, 1500 tanh | 0.86 | 0.01
+
+ELM: 100 linear | 0.64 | 0.01
+ELM: 100 linear, 10 tanh | 0.66 | 0.01
+ELM: 100 linear, 100 tanh | 0.74 | 0.01
+
+ELM: 500 linear | 0.75 | 0.01
+ELM: 500 linear, 10 tanh | 0.80 | 0.01
+ELM: 500 linear, 100 tanh | 0.82 | 0.01
