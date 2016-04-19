@@ -37,11 +37,18 @@ hidden dimension  | accuracy
 512 | 82.8%
 1024  | 83.8%
 
+Below table shows that usually iteration stops within 20 epochs because of no accuracy improvement.
+
 No. epochs | accuracy
 --- | ---
-1 | 
-10  | 
-20  | 
+1 | 50%
+10  |   82.8%
+20  |   82.8%
+30  |   80%
+40  |   79.2%
+50  |   79.7%
+60  |   80.4%
+
 
 ## end
 last edit 04/19/2016
