@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#$ -q UI
+#$ -l h_rt=500:00:00
+#$ -cwd
+#$ -pe smp 16
+
+module load python/2.7.10
+#python a.py
+#python imdb_preprocess.py
+THEANO_FLAGS="floatX=float32" python lstm.py >output
+
