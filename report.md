@@ -215,8 +215,10 @@ Here's a small subset of some of the features selected by our pipeline as useful
  - love
  - poor
 
+## LSTM Model
+
 
 ## Sources
 [1] Maas, Andrew L., et al. "Learning word vectors for sentiment analysis." Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies-Volume 1. Association for Computational Linguistics, 2011.
 
-[2] http://arxiv.org/pdf/1305.6143.pdf
+[2] Narayanan, Vivek, Ishan Arora, and Arjun Bhatia. "Fast and accurate sentiment classification using an enhanced Naive Bayes model." Intelligent Data Engineering and Automated Learning–IDEAL 2013. Springer Berlin Heidelberg, 2013. 194-201.
