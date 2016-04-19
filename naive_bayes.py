@@ -86,8 +86,8 @@ def main():
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     logging.info("Linear SVC L1, C=1".center(80, '-'))
-    # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
-    how_many_variables_used(word_list, inputs, outputs, num_vars=13000)
+    evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
+    # how_many_variables_used(word_list, inputs, outputs, num_vars=13000)
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
     # logging.info("Linear SVC L1, C=.1".center(80, '-'))
@@ -232,5 +232,5 @@ if __name__ == "__main__":
     utilities.initialize_logger()
 
     # check_different_data_options("training_data_3_gram.pkl")
-    # main()
-    evaluate_best_so_far()
+    main()
+    # evaluate_best_so_far()
