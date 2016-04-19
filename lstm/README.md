@@ -5,6 +5,8 @@ We hope to analyse the sentiment of IMDB reviews using LSTM classifier.
 Online tutorial and original python codes are from:
 http://deeplearning.net/tutorial/lstm.html
 
+The best accuracy is 86.1% with 1024 hidden units.
+
 ## notes
 `Optimizer: adadelta`, which is an adaptive learning rate method.
 So, initial learning rate (0.001) has no effect and is not needed.
@@ -27,6 +29,7 @@ max sentence length  | accuracy
 200 | 
 
 keep `maxlen=70`, vary `dim_proj`
+
 hidden dimension  | accuracy
 --- | ---
 128 | 78.6%
