@@ -45,14 +45,8 @@ def get_document_word_map(directory, limit=-1, n_grams=1):
             continue
 
         f = open(os.path.join(directory, filename), 'r', encoding='utf-8')
-        word_list = extract_words(f.readline())
-        n_gram_list = []
-        if n_grams > 1:
-            for n in range(2, n_grams + 1):
-                for i in range(n, len(word_list) + 1):
-                    n_gram_list.append("_".join(word_list[i - n: i]))
-
-        result[filename] = word_list + n_gram_list
+        full_text = f.readline()
+        handle_file_text(filename, full_text, n_grams, result)
         f.close()
         count += 1
 
@@ -62,6 +56,16 @@ def get_document_word_map(directory, limit=-1, n_grams=1):
 
     logging.info("Completed reading %d files from %s" % (count, directory))
     return result
+
+
+def handle_file_text(filename, full_text, n_grams, result):
+    word_list = extract_words(full_text)
+    n_gram_list = []
+    if n_grams > 1:
+        for n in range(2, n_grams + 1):
+            for i in range(n, len(word_list) + 1):
+                n_gram_list.append("_".join(word_list[i - n: i]))
+    result[filename] = word_list + n_gram_list
 
 
 def build_data_target_matrices(pos_directory, neg_directory, limit=-1, save_data=False,
@@ -130,8 +134,8 @@ def build_test_data_target_matrices(pos_directory, neg_directory, train_word_lis
             if not filename.endswith(".txt"):
                 continue
             f = open(os.path.join(directory, filename), 'r', encoding='utf-8')
-            words = set(extract_words(f.readline()))
-            for word in words:
+            # words = set(extract_words(f.readline()))
+            for word in word_map[filename].keys():
                 if word in lookup:
                     value_list.append(1 if binary_output else word_map[filename][word])
                     row_list.append(row)

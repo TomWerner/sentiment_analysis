@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A=="
+            crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw=="
+          crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Sentiment Analysis Demo</title>
+</head>
+
+<body>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div style="text-align: center; font-size: 30px; padding: 130px 30px 30px;">Movie Review Sentiment
+                Analysis
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <input type="text" name="review_text" id="review_text" class="form-control"/>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <div class="row" style="padding-top: 30px">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div style="text-align: center;">
+                <button class="btn btn-default" id="try_your_own" type="button" style="padding: 7px; margin: 10px">Try
+                    Your Own
+                </button>
+                <button class="btn btn-default" id="rand_pos_rev" type="button" style="padding: 7px; margin: 10px">
+                    Positive Review
+                </button>
+                <button class="btn btn-default" id="rand_neg_rev" type="button" style="padding: 7px; margin: 10px">
+                    Negative Review
+                </button>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row" style="padding-top: 30px">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <ul id="notification-group"
+                style="list-style-type: none; padding: 0; margin: 0; height: 500px; overflow: auto;">
+
+            </ul>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var handle_sentiment_decision = function (e) {
+            var notif_group = $('#notification-group');
+            console.log(e['text']);
+            console.log(e['text'].replace('&lt;', '<').replace('&gt;', '>'));
+            if (e['result'] === '0')
+                notif_group.append('<li><p style="list-style-type: none;" class="alert alert-danger" role="alert">' +  e['text'].replace('&lt;', '<').replace('&gt;', '>') + '</p></li>');
+            if (e['result'] === '1')
+                notif_group.append('<li><p style="list-style-type: none;" class="alert alert-success" role="alert">' + e['text'].replace('&lt;', '<').replace('&gt;', '>') + '</p></li>');
+            notif_group.scrollTop(notif_group[0].scrollHeight);
+        };
+
+        var try_your_own_submit = function(e) {
+            var data = {"text": $("#review_text").val()};
+            $.ajax({
+                url: "/try_your_own",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: handle_sentiment_decision
+            });
+        };
+        $("#try_your_own").click(try_your_own_submit);
+        $('#review_text').keyup(function (event) {
+            if (event.which == 13) {
+                try_your_own_submit(event)
+            }
+        });
+        $('#rand_pos_rev').click(function (e) {
+            var data = {"type": "pos"};
+            $.ajax({
+                url: "/rand_rev",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: handle_sentiment_decision
+            });
+        });
+        $('#rand_neg_rev').click(function (e) {
+            var data = {"type": "neg"};
+            $.ajax({
+                url: "/rand_rev",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: handle_sentiment_decision
+            });
+        });
+
+    });
+</script>
+</body>
+</html>
