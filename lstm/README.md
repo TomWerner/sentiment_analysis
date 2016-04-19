@@ -26,12 +26,13 @@ max sentence length  | accuracy
 150 | 
 200 | 
 
+keep `maxlen=70`, vary `dim_proj`
 hidden dimension  | accuracy
 --- | ---
-128 | 
+128 | 78.6%
 256 | 
-512 | 
-1024  | 
+512 | 82.8%
+1024  | 83.8%
 
 No. epochs | accuracy
 --- | ---
