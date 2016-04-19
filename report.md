@@ -215,6 +215,38 @@ Here's a small subset of some of the features selected by our pipeline as useful
  - love
  - poor
 
+## K-Nearest Neighbors
+We use `sklearn` package `KNeighborsClassifier` to classify movie reviews based on KNN method.
+
+All words are vectorized using a TF-IDF vectorizer, which ignores words that appear in less than 5 documents and ignores words that appear in more than 80% of documents.
+
+The number of neighbors in KNN classifier determines the accuracy of the prediction. We don't want the number of neighbors too few, which could not do a good job in classification. We don't want the number of neighbors too many either, which would consume too much computation power and could potentially over fit the model.
+
+Below is a list of training and testing using a series of numbers of neighbors. In the end, we use 19 neighbors, which give an accuracy of about 77%.
+
+### number of neighbors
+n_neighbors	|	accuracy
+---	|	---
+3	|	0.6801
+4	|	0.6748
+5	|	0.703
+6	|	0.6989
+7	|	0.7155
+8	|	0.7154
+9	|	0.7349
+10	|	0.732
+11	|	0.7448
+12	|	0.7359
+13	|	0.7526
+14	|	0.747
+15	|	0.7572
+16	|	0.7524
+17	|	0.7638
+18	|	0.7592
+19	|	0.7692
+
+KNN classifier is relatively slower than Naive Bayes and SVM for text classification. Probably it is because of the complicated distance metrics.
+
 ## LSTM Model
 
 
