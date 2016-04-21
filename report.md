@@ -284,10 +284,12 @@ The length of sentences are right skewed (Q1:67, Median 92, Q3:152). With squenc
 
 
 Second, keeping the `maxlen = 150`, we tested the effect of `max_features`, which varied from 2500 to 50000.
+
 max_features	| train accuracy | test accuracy
 ---	| --- | ---
-
-10000 | 0. | 
+2500 | 0.9119 | 0.8536
+5000 | 0.9324 | 0.8553
+10000 | 0.9664 | 0.8412
 20000 | 0.9725 | 0.8503
 30000 | 0.9850 | 0.8489
 40000 | 0.9854 | 0.8321
