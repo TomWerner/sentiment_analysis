@@ -66,7 +66,7 @@ Scikit-learn's K-Best feature selection tool allowed us to pick the top "K" vari
 Below we can see a plot of 10 fold cross validation accuracy vs "K".
 (The model we used here with the K-Best was an L1-regularzied logistic regression model)
 
-![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_max.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
+![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/sentence_length.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 ![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_4000.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 ![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_2500.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 
@@ -269,6 +269,11 @@ maxlen	|	time (s) | train accuracy | test accuracy
 150 | 2939 | 0.9725 | 0.8503
 175 | 3352 | 0.9819 | 0.8359
 200 |
+
+![L1_LSTM](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/sentence_length.png "")
+The length of sentences are right skewed (Q1:67, Median 92, Q3:152). With squence length of 150, about 75% of reviews are covered. 
+
+
 
 ## Sources
 [1] Maas, Andrew L., et al. "Learning word vectors for sentiment analysis." Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies-Volume 1. Association for Computational Linguistics, 2011.
