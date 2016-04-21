@@ -261,7 +261,9 @@ input matrix shape is (number of samples x maxlen)
 
 `maxlen` is the max length of each sequence. i.e., if a review has more than `maxlen` words, then this review will be truncated. However, if a review has less than `maxlen` words, then the sequence will pad 0's to make it a regular shape.
 
-First, we tested the effect of `maxlen`, which varied from 25 to 200.
+`max_features` is the dictionary size. The dictionary was created before data feed into LSTM RNN. Dictionary keys are purified words, dictionary values are the indicies, which is from 2 to 90000. Such that, the most frequent word has lowest index value. For those rarely occurred words, their indicies is large. We can use `max_features` to filter out uncommon words.
+
+First, keeping the `max_features = 20000`, we tested the effect of `maxlen`, which varied from 25 to 200.
 
 maxlen	|	time (s) | train accuracy | test accuracy
 ---	|	--- | --- | ---
