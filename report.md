@@ -287,6 +287,7 @@ Second, keeping the `maxlen = 150`, we tested the effect of `max_features`, whic
 
 max_features	| train accuracy | test accuracy
 ---	| --- | ---
+1500 | 0.8806 | 0.8554
 2500 | 0.9119 | 0.8536
 5000 | 0.9324 | 0.8553
 10000 | 0.9664 | 0.8412
