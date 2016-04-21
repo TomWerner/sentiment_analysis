@@ -296,6 +296,8 @@ max_features	| train accuracy | test accuracy
 50000 | 0.9843 | 0.8257
 60000 | 0.9854 | 0.8470
 
+It is interesting to notice that the most frequently appeared 2500 english words could largely determine the sentiment of movie reviews very well.
+
 
 ## Future impovements
 ### Better feature selection
