@@ -64,7 +64,8 @@ def main():
     # chi2_cv_feature_selection(inputs, outputs, model, 10000, "images/features_vs_accuracy_NB_0_to_10000.png")
     # chi2_cv_feature_selection(inputs, outputs, model, 6000, "images/features_vs_accuracy_NB_0_to_6000.png")
 
-    # chi2_cv_feature_selection(inputs, outputs, LogisticRegression(penalty='l1'), inputs.shape[1], "images/features_vs_accuracy_LogRegL1_0_to_max_2_gram.png")
+    # chi2_cv_feature_selection(inputs, outputs, LogisticRegression(), inputs.shape[1], "images/lin_reg_features_vs_accuracy_LogReg_0_to_max_3_gram.png")
+    # chi2_cv_feature_selection(inputs, outputs, LogisticRegression(penalty='l1'), inputs.shape[1], "images/lin_reg_features_vs_accuracy_LogRegL1_0_to_max_3_gram.png")
     # chi2_cv_feature_selection(inputs, outputs, LogisticRegression(penalty='l1'), 100000, "images/features_vs_accuracy_LogRegL1_0_to_100k_2_gram.png")
     # chi2_cv_feature_selection(inputs, outputs, Pipeline([('l1_linear_svc', SelectFromModel(LinearSVC(penalty='l1', dual=False))),
     #                                                      ('l2_linear_svc', LinearSVC())]), 20000, "images/features_vs_accuracy_2_gram_LinSVCL1_0_to_20k.png")
@@ -76,7 +77,7 @@ def main():
     # chi2_cv_feature_selection(inputs, outputs, LinearSVC(penalty='l1', dual=False), 100000, "images/features_vs_accuracy_3_gram_LinSVCL1_0_to_100k.png")
     # chi2_cv_feature_selection(inputs, outputs, LinearSVC(penalty='l1', dual=False), 40000, "images/features_vs_accuracy_3_gram_LinSVCL1_0_to_40k.png", k=3)
 
-    # evaluate_var_selected_models(inputs, outputs, num_vars=8000)
+    evaluate_var_selected_models(inputs, outputs, num_vars=600000)
     # evaluate_var_selected_models(inputs, outputs, num_vars=10000, l1_step=LinearSVC(penalty='l1', dual=False))
     # evaluate_var_selected_models(inputs, outputs, num_vars=50000, l1_step=LogisticRegression(penalty='l1'))
     # logging.info("Logistic Regression L1".center(80, '-'))
@@ -85,8 +86,8 @@ def main():
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
-    logging.info("Linear SVC L1, C=1".center(80, '-'))
-    evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
+    # logging.info("Linear SVC L1, C=1".center(80, '-'))
+    # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=1))
     # how_many_variables_used(word_list, inputs, outputs, num_vars=13000)
     # logging.info("Linear SVC L1, C=10".center(80, '-'))
     # evaluate_var_selected_models(inputs, outputs, num_vars=13000, l1_step=LinearSVC(penalty='l1', dual=False, C=10))
@@ -121,18 +122,19 @@ def how_many_variables_used(word_list, inputs, outputs, num_vars, l1_step=Linear
 def evaluate_var_selected_models(inputs, outputs, num_vars, l1_step=LogisticRegression('l1')):
     # models = [BernoulliNB(), MultinomialNB(), LinearSVC(), LinearSVC(penalty='l1', dual=False), LogisticRegression(), LogisticRegression('l1')]
     # model_names = ["BernoulliNB", "MultinomialNB", "LinearSVC", "L1_LinearSVC", "LogisticRegression", "L1_LogisticRegression"]
-    models = [LinearSVC(), LinearSVC(C=.1), LinearSVC(C=10), LinearSVC(C=100),
-              LinearSVC(penalty='l1', dual=False), LinearSVC(penalty='l1', dual=False, C=.1), LinearSVC(penalty='l1', dual=False, C=10), LinearSVC(penalty='l1', dual=False, C=100)]
-    model_names = ["LinearSVC", "LinearSVC C=.1", "LinearSVC C=10", "LinearSVC C=100",
-                   "L1_LinearSVC", "L1_LinearSVC C=.1", "L1_LinearSVC C=10", "L1_LinearSVC C=100"]
-    for model, model_name in zip(models, model_names):
-        pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
-                             ('l1_step', SelectFromModel(l1_step)),
-                             (model_name, model)
-                             ])
+    # models = [LinearSVC(), LinearSVC(C=.1), LinearSVC(C=10), LinearSVC(C=100),
+    #           LinearSVC(penalty='l1', dual=False), LinearSVC(penalty='l1', dual=False, C=.1), LinearSVC(penalty='l1', dual=False, C=10), LinearSVC(penalty='l1', dual=False, C=100)]
+    # model_names = ["LinearSVC", "LinearSVC C=.1", "LinearSVC C=10", "LinearSVC C=100",
+    #                "L1_LinearSVC", "L1_LinearSVC C=.1", "L1_LinearSVC C=10", "L1_LinearSVC C=100"]
+    for penalty in ['l1', 'l2']:
+        for C in [.01, .1, 1, 10]:
+            pipeline = Pipeline([('chi2_top_k', SelectKBest(chi2, num_vars)),
+                                 # ('l1_step', SelectFromModel(l1_step)),
+                                 ('LogReg_' + penalty + "C=" + str(C), LogisticRegression(penalty=penalty, C=C))
+                                 ])
 
-        scores = cross_val_score(pipeline, inputs, outputs.ravel(), cv=10, n_jobs=5)
-        logging.info("%s | %.02f | %.02f" % (model_name, scores.mean(), scores.std()))
+            scores = cross_val_score(pipeline, inputs, outputs.ravel(), cv=10, n_jobs=5)
+            logging.info("%s | %.02f | %.02f" % ('LogReg_' + penalty + "C=" + str(C), scores.mean(), scores.std()))
 
 
 def check_different_data_options(training_data_filename="training_data.pkl"):
@@ -142,16 +144,16 @@ def check_different_data_options(training_data_filename="training_data.pkl"):
 
     tfidf_inputs = TfidfTransformer().fit_transform(inputs)
 
-    vectorizer = TfidfVectorizer(input="filename", decode_error='ignore', strip_accents='ascii', analyzer='word',
-                                 ngram_range=(1, 1), stop_words='english', min_df=.1)
-    logging.info("Starting...")
-    sklearn_inputs = vectorizer.fit_transform(["aclImdb/train/pos/" + x for x in os.listdir("aclImdb/train/pos")] +
-                                      ["aclImdb/train/neg/" + x for x in os.listdir("aclImdb/train/neg")])
-    logging.info("Finished vectorizing")
+    # vectorizer = TfidfVectorizer(input="filename", decode_error='ignore', strip_accents='ascii', analyzer='word',
+    #                              ngram_range=(1, 1), stop_words='english', min_df=.1)
+    # logging.info("Starting...")
+    # sklearn_inputs = vectorizer.fit_transform(["aclImdb/train/pos/" + x for x in os.listdir("aclImdb/train/pos")] +
+    #                                   ["aclImdb/train/neg/" + x for x in os.listdir("aclImdb/train/neg")])
+    # logging.info("Finished vectorizing")
 
-    for input_matrix, name in zip([inputs, tfidf_inputs, sklearn_inputs], ['Normal Inputs', 'TF-IDF Inputs', 'Sklearn tfidf']):
-        for model, model_name in zip([BernoulliNB(), MultinomialNB(), LogisticRegression(penalty='l1'), LinearSVC(penalty='l1', dual=False), LinearSVC()],
-                                     ['Bernoulli', 'Multinomial', 'LogReg', "L1_LinearSVC", "LinearSVC"]):
+    for input_matrix, name in zip([inputs, tfidf_inputs], ['Normal Inputs', 'TF-IDF Inputs']):
+        for model, model_name in zip([LogisticRegression(), LogisticRegression(penalty='l1')],
+                                     ['LogReg', 'LogReg_L1']):
             scores = cross_val_score(model, input_matrix, outputs.ravel(), cv=10)
             logging.info("%s | %s | %.02f | %.02f" % (model_name, name, scores.mean(), scores.std()))
 
@@ -217,9 +219,10 @@ def evaluate_best_so_far():
     inputs, outputs, word_list = pickle.load(open("training_data_3_gram.pkl", 'rb'))
     test_inputs, test_outputs, _ = pickle.load(open("testing_data_3_gram.pkl", 'rb'))
     pipeline = Pipeline([('tfidf', TfidfTransformer()),
-                         ('chi2_top_k', SelectKBest(chi2, 13000)),
-                         ('l1_step', SelectFromModel(LinearSVC(penalty='l1', dual=False, C=1))),
-                         ('linear_svc', LinearSVC(penalty='l2', C=1))])
+                         ('chi2_top_k', SelectKBest(chi2, 60000)),
+                         # ('l1_step', SelectFromModel(LinearSVC(penalty='l1', dual=False, C=1))),
+                         # ('linear_svc', LinearSVC(penalty='l2', C=1))])
+                         ('log_reg', LogisticRegression(penalty='l2', C=10))])
 
     pipeline.fit(inputs, outputs.ravel())
     # scores = cross_val_score(pipeline, inputs, outputs.ravel(), cv=10, n_jobs=5)
@@ -232,5 +235,6 @@ if __name__ == "__main__":
     utilities.initialize_logger()
 
     # check_different_data_options("training_data_3_gram.pkl")
-    main()
-    # evaluate_best_so_far()
+    # check_different_data_options("training_data.pkl")
+    # main()
+    evaluate_best_so_far()
