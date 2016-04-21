@@ -249,6 +249,25 @@ KNN classifier is relatively slower than Naive Bayes and SVM for text classifica
 
 ## LSTM Model
 
+Due to computationly intensive of LSTM method, we only use two LSTM layes in our classifcation model. These two LSTM layes are bidirectional, which include a forwads LSTM and a backwards LSTM. 
+
+input matrix shape is (number of samples x maxlen)
+
+`number_of_samples` here is 25000 reviews. All reviews are transform into sequences of word vector.
+
+`maxlen` is the max length of each sequence. i.e., if a review has more than `maxlen` words, then this review will be truncated. However, if a review has less than `maxlen` words, then the sequence will pad 0's to make it a regular shape.
+
+First, we tested the effect of `maxlen`, which varied from 25 to 200.
+maxlen	|	time (s) | train accuracy | test accuracy
+---	|	--- | --- | ---
+25 | 618 | 0.9757 | 0.7589
+50 | 1113 | 0.9876 | 0.8047
+75 | 1507 | 0.9882 | 0.8243
+100 | 2004 | 0.9813 | 0.8410
+125 | 2435 | 0.9774 | 0.8384
+150 | 2939 | 0.9725 | 0.8503
+175 | 3352 | 0.9819 | 0.8359
+200 |
 
 ## Sources
 [1] Maas, Andrew L., et al. "Learning word vectors for sentiment analysis." Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies-Volume 1. Association for Computational Linguistics, 2011.
