@@ -268,7 +268,7 @@ maxlen	|	time (s) | train accuracy | test accuracy
 125 | 2435 | 0.9774 | 0.8384
 150 | 2939 | 0.9725 | 0.8503
 175 | 3352 | 0.9819 | 0.8359
-200 |
+200 | 3811 | 0.9831 | 0.8514
 
 ![L1_LSTM](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/sentence_length.png "")
 The length of sentences are right skewed (Q1:67, Median 92, Q3:152). With squence length of 150, about 75% of reviews are covered. 
