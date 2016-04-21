@@ -282,6 +282,11 @@ maxlen	|	time (s) | train accuracy | test accuracy
 The length of sentences are right skewed (Q1:67, Median 92, Q3:152). With squence length of 150, about 75% of reviews are covered. 
 ![L1_LSTM](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/length_accuracy.png "")
 
+## Future impovements
+### Better feature selection
+(1) Something that could help cut down on extraneous words is pyenchant https://pythonhosted.org/pyenchant/api/enchant.html. Basic idea is to make your input text a list of words, and fix spelling errors (or recorrect words that shouldn't belong).
+(2) Stem word and word2vec
+
 
 ## Sources
 [1] Maas, Andrew L., et al. "Learning word vectors for sentiment analysis." Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies-Volume 1. Association for Computational Linguistics, 2011.
