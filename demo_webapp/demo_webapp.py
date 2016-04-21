@@ -44,21 +44,19 @@ def home():
 
 
 def load_model():
-    if os.path.isfile("demo_model.pkl"):
-        pipeline, word_list = pickle.load(open("demo_model.pkl", 'rb'))
+    if os.path.isfile("demo_model_lin_reg.pkl"):
+        pipeline, word_list = pickle.load(open("demo_model_lin_reg.pkl", 'rb'))
         logging.info("Model loaded")
         return pipeline, word_list
     else:
         inputs, outputs, word_list = pickle.load(open("training_data_3_gram.pkl", 'rb'))
         logging.info("Data loaded")
         pipeline = Pipeline([('tfidf', TfidfTransformer()),
-                             ('chi2_top_k', SelectKBest(chi2, 13000)),
-                             ('l1_step', SelectFromModel(LinearSVC(penalty='l1', dual=False, C=1))),
-                             ('linear_svc', LinearSVC(penalty='l2', C=1))])
+                             ('log_reg', LogisticRegression(penalty='l2', C=10))])
         pipeline.fit(inputs, outputs.ravel())
         logging.info("Pipeline trained")
 
-        pickle.dump((pipeline, word_list), open("demo_model.pkl", 'wb'))
+        pickle.dump((pipeline, word_list), open("demo_model_lin_reg.pkl", 'wb'))
         logging.info("Pipeline saved")
         return load_model()
 
