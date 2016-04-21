@@ -66,7 +66,7 @@ Scikit-learn's K-Best feature selection tool allowed us to pick the top "K" vari
 Below we can see a plot of 10 fold cross validation accuracy vs "K".
 (The model we used here with the K-Best was an L1-regularzied logistic regression model)
 
-![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/sentence_length.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
+![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_1000.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 ![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_4000.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 ![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_2500.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 
