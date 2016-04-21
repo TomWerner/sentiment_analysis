@@ -251,7 +251,7 @@ KNN classifier is relatively slower than Naive Bayes and SVM for text classifica
 
 Due to computationly intensive of LSTM method, we only use two LSTM layes in our classifcation model. These two LSTM layes are bidirectional, which include a forwads LSTM and a backwards LSTM. 
 
-Feature extraction was done by reading all training reviews and parsing all english words, as well as removing stop words.
+Feature extraction was done by reading all training reviews and tokenizing all english words, as well as removing stop words using `nltk` package.
 
 Training in LSTM RNN contains two steps. First, run the neural network going forward. This sets the cell states.
 Then, you go backwards computing derivatives. This uses the cell states (what the network knows at a given point in time) to figure out how to change the network's weights. When LSTM updates cell states, we choose to use the default `Adam` optimizer (http://arxiv.org/abs/1412.6980v8), which is a method for Stochastic Optimization. The optimizer minimizes the loss function, which here is the mean square error between expected output and acutal output.
