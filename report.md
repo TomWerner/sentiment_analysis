@@ -258,6 +258,7 @@ input matrix shape is (number of samples x maxlen)
 `maxlen` is the max length of each sequence. i.e., if a review has more than `maxlen` words, then this review will be truncated. However, if a review has less than `maxlen` words, then the sequence will pad 0's to make it a regular shape.
 
 First, we tested the effect of `maxlen`, which varied from 25 to 200.
+
 maxlen	|	time (s) | train accuracy | test accuracy
 ---	|	--- | --- | ---
 25 | 618 | 0.9757 | 0.7589
