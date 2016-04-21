@@ -282,6 +282,19 @@ maxlen	|	time (s) | train accuracy | test accuracy
 The length of sentences are right skewed (Q1:67, Median 92, Q3:152). With squence length of 150, about 75% of reviews are covered. 
 ![L1_LSTM](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/length_accuracy.png "")
 
+
+Second, keeping the `maxlen = 150`, we tested the effect of `max_features`, which varied from 2500 to 50000.
+max_features	| train accuracy | test accuracy
+---	| --- | ---
+
+10000 | 0. | 
+20000 | 0.9725 | 0.8503
+30000 | 0.9850 | 0.8489
+40000 | 0.9854 | 0.8321
+50000 | 0.9843 | 0.8257
+60000 | 0.9854 | 0.8470
+
+
 ## Future impovements
 ### Better feature selection
 (1) Something that could help cut down on extraneous words is pyenchant https://pythonhosted.org/pyenchant/api/enchant.html. Basic idea is to make your input text a list of words, and fix spelling errors (or recorrect words that shouldn't belong).
