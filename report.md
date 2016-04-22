@@ -283,7 +283,7 @@ The length of sentences are right skewed (Q1:67, Median 92, Q3:152). With squenc
 ![L1_LSTM](https://github.com/TomWerner/sentiment_analysis/blob/master/lstm/length_accuracy.png "")
 
 
-Second, keeping the `maxlen = 150`, we tested the effect of `max_features`, which varied from 2500 to 50000.
+Second, keeping the `maxlen = 150`, we tested the effect of `max_features`, which varied from 250 to 50000.
 
 max_features	| train accuracy | test accuracy
 ---	| --- | ---
