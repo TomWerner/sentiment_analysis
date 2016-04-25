@@ -308,7 +308,8 @@ Britain’s Guardian newspaper, in 1986, estimated the size of the average perso
 ## Future impovements
 
 (1) Something that could help cut down on extraneous words is pyenchant https://pythonhosted.org/pyenchant/api/enchant.html. Basic idea is to make your input text a list of words, and fix spelling errors (or recorrect words that shouldn't belong).  
-(2) Stem word and word2vec
+(2) Stem word and word2vec  
+(3) Adding GPU support for the LSTM
 
 
 ## Sources
