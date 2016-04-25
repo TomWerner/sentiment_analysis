@@ -4,7 +4,7 @@ Group G3: Tom Werner, Changghui Xu, John Tollefson
 ## Project Description and Overview
 We were tasked with doing sentiment analysis, and decided that the Large Movie Review Dataset, consisting of 50,000
 ImDB movie reviews, would be a good dataset to work with. The datset is split into 25,000 training reviews and
-25,000 testing reviews, and the positive/negative split is equal in both partitions.
+25,000 testing reviews, and the positive/negative split is equal in both partitions. The reviews are coded with (1) meaning a positive review and (0) meaning a negative review. 
 
 In our project proposal we decided to target two models in particular - the Naive Bayes, model, well known in
 sentiment analysis tasks, and a Long Short Term Memory (LSTM) neural network model. If we had time we would explore
@@ -33,16 +33,15 @@ It achieved an accuracy of 81% on 10 fold cross validation of the entire trainin
 We also tried using the counts instead of the simple binary inputs, but it made no difference for this model.
 
 ### Data Selection
-We knew we could do better than 81%, and we also knew that one way to improve was to use the inputs more wisely.
+We knew we could do better than 81%, and we also knew that one way to improve was to use the inputs more effectively.
 As it stood, using the counts, the word "the" would be significantly more important than "awful", "terrific", or "amazing",
 simply because "the" has such a high frequency of appearance. To deal with this we looked at three different data sources.
 Our basic count matrix, the TF-IDF transformed matrix, or the scikit-learn provided TF-IDF text extraction tool.
 
-Side note: the TF-IDF transformation is the text frequency-inverse document frequency transformation, which take into account
+The TF-IDF transformation is the text frequency-inverse document frequency transformation, which take into account
 both how many times a term appears in a single document (review), but also makes it less important if it appears in many documents.
-This means words like "the" will be less important.
-
-We used three models on each of the three data options to make our decision.
+This means words like "the" will be less important.  
+In order to empirically decide the best data source, we used 10-fold cross validation on our training dataset, using three models - we wanted to ensure that a single model performing poorly on a data source didn't overly influence our choice.
 
 Model | Input Type | 10-fold Accuracy | Stardard Dev
 --- | --- | --- | ---
@@ -57,21 +56,18 @@ Multinomial Naive Bayes | Sci-kit learn TF-IDF | 0.71 | 0.01
 LogReg | Sci-kit learn TF-IDF | 0.71 | 0.01
 
 As we can see, the TF-IDF transformed input data outperformed the other data sources significantly. We also see that
-we have already beaten our baseline of 81% with a slightly misleading 87% accuracy.
+we have already beaten our baseline of 81% with a slightly misleading 87% accuracy. We'll go into why this is misleading in more detail later.
 
 ### Feature Selection
-Our vocabulary size from the review was over 60,000 words - or 60,000 variables to handle. The data is extremely sparse,
-but its still a large problem. To handle this, we used feature selection techniques that work on sparse data.
+Our vocabulary size from the review was over 60,000 words - or 60,000 variables to handle. The data is extremely sparse, which is why we could run this on personal computers, but it was still a large problem. To handle this, we used feature selection techniques that work on sparse data. To handle this, we used feature selection techniques that work on sparse data.
 Scikit-learn's K-Best feature selection tool allowed us to pick the top "K" variables, as determined by a chi-squared test.
-Below we can see a plot of 10 fold cross validation accuracy vs "K".
-(The model we used here with the K-Best was an L1-regularzied logistic regression model)
+We then trained a model using the top K features, with K ranging from 0 to max, then 0 to 4000, and finally 0 to 2500. The two lines plotted are the training and validation accuracy. Because we do have balanced classes, accuracy was not unreasonable to use as a metric here. The model we used was a Logistric Regression model with L1 regularization, which we choose because it was a nice balance of training and performance.
 
-![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_1000.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
+![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_max.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 ![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_4000.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 ![L1_LogReg](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_LogRegL1_0_to_2500.png "L1 Regularized Logistic Regression Feature Count vs Accuracy")
 
-From these plots we can see that somewhere around 2000 features seems ideal. We then built a series of models using
-these 2000 features, followed by an L1 regularized logistic regression feature selector, to determine the best model.
+From these plots we can see that somewhere around 2000 features seems ideal. We then built a series of models a pipeline where we choose the top 2000 features, then used an L1 regularization feature selector, and finally trained the model in question to determine the best model.
 
  Model | 10-fold Accuracy | Standard Dev | 10-fold train/pred time (seconds)
 --- | --- | --- | ---
@@ -93,6 +89,7 @@ There are a couple things to note here:
  it still overfits because the test set will not have the same vocabulary. The top 10,000 words might be the same, even the top 20,000,
  but certainly not all of them. Because of this feature selection is essential for accurate model evaluation, and so our
  new models that achieve 87% accuracy on a very limited subset of the features are much more likely to generalize well.
+ If we had run cross validation where we did vocabulary extraction from that particular training set, and used that on the testing set, we could eliminate this issue, but for runtime considerations we did not and focused instead on feature selection to handle this issue.
 
 ### N-Grams
 Another technique to improve the accuracy of sentiment analysis is the inclusion of N-Grams, which capture more than just
@@ -117,8 +114,7 @@ The TF-IDF data still performs the best, and we again see the misleadingly high 
 
 ### Feature Selection Part 2
 Including 2 and 3 grams adds an incredible number of features to the model, so we repeated our feature selection pipeline.
-We were able to go from 1,000,000 features down to 13,000.
-(Our evaluation model has now changed to an L1 regularized LinearSVC, since it out performs the logistic regression model)
+We were able to go from 1,000,000 features down to 13,000. The process followed here is the same as without the N-grams, it just took longer to run. Additionally, our evaluation model has now changed to an L1 regularized LinearSVC, since it out performs the logistic regression model.
 
 ![L1_LinSVC_3_gram](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_3_gram_LinSVCL1_0_to_max.png "L1 Regularized Linear SVC Feature Count vs Accuracy")
 ![L1_LinSVC_3_gram](https://github.com/TomWerner/sentiment_analysis/blob/master/images/features_vs_accuracy_3_gram_LinSVCL1_0_to_100k.png "L1 Regularized Linear SVC Feature Count vs Accuracy")
