@@ -4,7 +4,7 @@ Group G3: Tom Werner, Changghui Xu, John Tollefson
 ## Project Description and Overview
 We were tasked with doing sentiment analysis, and decided that the Large Movie Review Dataset, consisting of 50,000
 ImDB movie reviews, would be a good dataset to work with. The datset is split into 25,000 training reviews and
-25,000 testing reviews, and the positive/negative split is equal in both partitions.
+25,000 testing reviews, and the positive/negative split is equal in both partitions. The reviews are coded with (1) meaning a positive review and (0) meaning a negative review. 
 
 In our project proposal we decided to target two models in particular - the Naive Bayes, model, well known in
 sentiment analysis tasks, and a Long Short Term Memory (LSTM) neural network model. If we had time we would explore
@@ -33,16 +33,15 @@ It achieved an accuracy of 81% on 10 fold cross validation of the entire trainin
 We also tried using the counts instead of the simple binary inputs, but it made no difference for this model.
 
 ### Data Selection
-We knew we could do better than 81%, and we also knew that one way to improve was to use the inputs more wisely.
+We knew we could do better than 81%, and we also knew that one way to improve was to use the inputs more effectively.
 As it stood, using the counts, the word "the" would be significantly more important than "awful", "terrific", or "amazing",
 simply because "the" has such a high frequency of appearance. To deal with this we looked at three different data sources.
 Our basic count matrix, the TF-IDF transformed matrix, or the scikit-learn provided TF-IDF text extraction tool.
 
-Side note: the TF-IDF transformation is the text frequency-inverse document frequency transformation, which take into account
+The TF-IDF transformation is the text frequency-inverse document frequency transformation, which take into account
 both how many times a term appears in a single document (review), but also makes it less important if it appears in many documents.
 This means words like "the" will be less important.
-
-We used three models on each of the three data options to make our decision.
+In order to empirically decide the best data source, we used 10-fold cross validation on our training dataset, using three models - we wanted to ensure that a single model performing poorly on a data source didn't overly influence our choice.
 
 Model | Input Type | 10-fold Accuracy | Stardard Dev
 --- | --- | --- | ---
@@ -57,11 +56,10 @@ Multinomial Naive Bayes | Sci-kit learn TF-IDF | 0.71 | 0.01
 LogReg | Sci-kit learn TF-IDF | 0.71 | 0.01
 
 As we can see, the TF-IDF transformed input data outperformed the other data sources significantly. We also see that
-we have already beaten our baseline of 81% with a slightly misleading 87% accuracy.
+we have already beaten our baseline of 81% with a slightly misleading 87% accuracy. We'll go into why this is misleading in more detail later.
 
 ### Feature Selection
-Our vocabulary size from the review was over 60,000 words - or 60,000 variables to handle. The data is extremely sparse,
-but its still a large problem. To handle this, we used feature selection techniques that work on sparse data.
+Our vocabulary size from the review was over 60,000 words - or 60,000 variables to handle. The data is extremely sparse, which is why we could run this on personal computers, but it was still a large problem. To handle this, we used feature selection techniques that work on sparse data.
 Scikit-learn's K-Best feature selection tool allowed us to pick the top "K" variables, as determined by a chi-squared test.
 Below we can see a plot of 10 fold cross validation accuracy vs "K".
 (The model we used here with the K-Best was an L1-regularzied logistic regression model)
